@@ -19,8 +19,8 @@
                      listener="#{portalData.init()}"/>
             <f:event type="preRenderView" 
                      listener="#{infoData.init()}"/>
-            <f:event type="preRenderView" 
-                     listener="#{fileUploadController.initExcel()}"/>
+            <!--            <f:event type="preRenderView" 
+                                 listener="#1{fileUploadController.initExcel()}"/>-->
             <h:form id="accessMessage" 
                     rendered="#{not portalData.showContent}">
                 <h:outputText value="#{portalData.message}"/>
@@ -43,7 +43,7 @@
                                     sizeLimit="#{fileUploadData.maxFileSize}"
                                     invalidSizeMessage="not more than 25mb"
                                     allowTypes="/(\.|\/)(xlsx|xls|csv|pdf|docx|txt|jpg|ods)$/i" 
-                                    update=":#{p:component('messages')}"/>
+                                    update=":#{p:component('messages')},:#{p:component('table')}"/>
 
                     <p:growl id="messages"
                              showDetail="true" />
@@ -51,16 +51,43 @@
 
                     <br />
 
-                    <p:fileUpload   id="simpleUpload"
-                                    mode="simple"
-                                    value="#{fileUploadController.simpleFileUpload}"
-                                    dragDropSupport="true"  
-                                    sizeLimit="#{fileUploadData.maxFileSize}"
-                                    invalidSizeMessage="not more than 25mb"
-                                    allowTypes="/(\.|\/)(xlsx|xls|csv|pdf|docx|txt|jpg|ods)$/i" 
-                                    update=":#{p:component('messages')}"/>
 
                     <br />
+
+                    <p:panel>
+                        <p:dataTable id="table"
+                                     value="#{fileUploadData.uploadedList}"
+                                     var="col"
+                                     scrollHeight="200"
+                                     scrollRows="100"
+                                     scrollable="true"
+                                     reflow="true"
+                                     rowIndexVar="memberIndexVar">
+                            <p:column headerText="Member No.">
+                                <h:outputText value="#{col[0]}"/>
+                            </p:column>
+                            <p:column headerText="Holder Profile ID">
+                                <h:outputText value="#{col[1]}"/>
+                            </p:column>
+                            <p:column headerText="Name">
+                                <h:outputText value="#{col[2]}"/>
+                            </p:column>
+                            <p:column headerText="Organization">
+                                <h:outputText value="#{col[3]}"/>
+                            </p:column>
+                            <p:column headerText="Approver Name">
+                                <!--onblur="value = value.toUpperCase()"-->
+                                <p:inputText value="#{col[4]}">
+                                    <p:ajax event="blur"
+                                            update="@this"/>
+                                </p:inputText>
+                            </p:column>
+                        </p:dataTable>
+
+
+
+
+                    </p:panel>
 
                 </div>
             </h:form>
