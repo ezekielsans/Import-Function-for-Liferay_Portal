@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:prcc="http://java.sun.com/jsf/composite/prcomponents"
+      xmlns:composite="http://java.sun.com/jsf/composite">
+    <ui:composition template="/templates/layout.xhtml">
+        <ui:define id="indexContent" 
+                   name="content">
+
+            <f:event type="preRenderView" 
+                     listener="#{customDate.init()}"/>
+            <f:event type="preRenderView" 
+                     listener="#{portalData.init()}"/>
+            <f:event type="preRenderView" 
+                     listener="#{infoData.init()}"/>
+            <f:event type="preRenderView" 
+                     listener="#{fileUploadController.initExcel()}"/>
+            <h:form id="accessMessage" 
+                    rendered="#{not portalData.showContent}">
+                <h:outputText value="#{portalData.message}"/>
+            </h:form>
+            <h:form id="indexForm" 
+                    enctype="multipart/form-data"
+                    rendered="#{portalData.showContent}">
+
+                <div class="ui-grid ui-grid-responsive">
+                    <prcc:confirmDialog/>
+                    <prcc:ajaxStatus/>
+                    <prcc:growl/>
+
+                    <p:outputLabel value="Primefaces File Upload Here"/>
+
+                    <p:fileUpload   id="uploadFile"
+                                    mode="advanced"
+                                    fileUploadListener="#{fileUploadController.upload}"
+                                    dragDropSupport="true"  
+                                    sizeLimit="#{fileUploadData.maxFileSize}"
+                                    invalidSizeMessage="not more than 25mb"
+                                    allowTypes="/(\.|\/)(xlsx|xls|csv|pdf|docx|txt|jpg|ods)$/i" 
+                                    update=":#{p:component('messages')}"/>
+
+                    <p:growl id="messages"
+                             showDetail="true" />
+
+
+                    <br />
+
+                    <p:fileUpload   id="simpleUpload"
+                                    mode="simple"
+                                    value="#{fileUploadController.simpleFileUpload}"
+                                    dragDropSupport="true"  
+                                    sizeLimit="#{fileUploadData.maxFileSize}"
+                                    invalidSizeMessage="not more than 25mb"
+                                    allowTypes="/(\.|\/)(xlsx|xls|csv|pdf|docx|txt|jpg|ods)$/i" 
+                                    update=":#{p:component('messages')}"/>
+
+                    <br />
+
+                </div>
+            </h:form>
+        </ui:define>
+
+    </ui:composition>
+</html>
+
